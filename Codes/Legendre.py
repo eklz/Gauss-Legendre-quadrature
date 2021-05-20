@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import cmath
 # %%
 
+
 def Legendre(n, t):
     Pk0 = np.poly1d([1])
     Pk1 = np.poly1d([1, -1/len(t)*np.sum(t)])
@@ -22,6 +23,7 @@ def Legendre(n, t):
 
     return Pk2
 # %%
+
 
 def Laguerre(m, Pm, sigma=0.001):
     k, Pk = m, Pm
@@ -58,6 +60,7 @@ def Laguerre(m, Pm, sigma=0.001):
 
 
 # %%
-Pm = Legendre(22, [i/1000 for i in range(1000)])
-Laguerre(22, Pm)
+if __name__ == "__main__":
+    Pm = Legendre(10, [i/1000 for i in range(1000)])
+    Laguerre(10, Pm)
 # %%
