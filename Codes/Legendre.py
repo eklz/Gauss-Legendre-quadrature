@@ -24,7 +24,6 @@ def Legendre(n, t):
     return Pk2
 
 
-
 # %%
 
 
@@ -61,9 +60,10 @@ def Laguerre(m, Pm, sigma=0.001):
 
     return np.sort(res)
 
+
 def roots_leg(n, t):
-    Pk0 = np.poly1d([1]) # 1
-    Pk1 = np.poly1d([1, -1/len(t)*np.sum(t)]) # x - (1/n)*sum(t)
+    Pk0 = np.poly1d([1])  # 1
+    Pk1 = np.poly1d([1, -1/len(t)*np.sum(t)])  # x - (1/n)*sum(t)
     Bk = np.sum([i*Pk1(i)**2 for i in t])
     Bk = Bk/np.sum([Pk1(i)**2 for i in t])
     J = np.zeros((n, n))
@@ -77,7 +77,7 @@ def roots_leg(n, t):
         Gk = Gk/np.sum([Pk0(i)**2 for i in t])
 
         beta = np.sqrt(Gk)
-        Pk2 = Pk1*np.poly1d([1, -Bk]) - Gk*Pk0 
+        Pk2 = Pk1*np.poly1d([1, -Bk]) - Gk*Pk0
 
         Pk0, Pk1 = Pk1, Pk2
 
@@ -89,7 +89,7 @@ def roots_leg(n, t):
 
 
 def Lagrange(i, roots):
-    L = np.poly1d([1]) # 1
+    L = np.poly1d([1])  # 1
     ai = roots[i]
     for a in np.delete(roots, i):
         L = L*1/(ai-a)*np.poly1d([1, -a])
@@ -100,38 +100,40 @@ def interp_gauss_legendre(n, t, y, norm=False):
     res = []
     min = np.min(t)
     max = np.max(t)
-    if norm : 
+    if norm:
         t = (t-min)/(max-min)
-        
+
     roots = roots_leg(n, t)
     roots = np.sort(roots)
     if len(t) != len(y):
-        raise ValueError(f't and y must have the same length, t has length {len(t)} and y {len(y)}')
-    
+        raise ValueError(
+            f't and y must have the same length, t has length {len(t)} and y {len(y)}')
+
     for i in range(n):
         L = Lagrange(i, roots)
-        norm =np.sum([L(j)**2 for j in t])
+        norm = np.sum([L(j)**2 for j in t])
         sum = np.sum([L(t[k])*y[k] for k in range(len(y))])
         res.append(1/norm * sum)
-    
+
     if norm:
         roots = roots*(max-min) + min
-        
+
     return roots, res
+
 
 def interp_gauss_legendre_pp(n, lt, ly):
     roots, res = [], []
-    if len(lt)!=len(ly):
+    if len(lt) != len(ly):
         raise AttributeError('lt and ly must have the same length')
     for i in range(len(lt)):
         t = lt[i]
         y = ly[i]
         X, Y = interp_gauss_legendre(n, t, y, norm=True)
-        roots = np.concatenate((roots,X))
-        res = np.concatenate((res,Y))
-        
+        roots = np.concatenate((roots, X))
+        res = np.concatenate((res, Y))
+
     return roots, res
-    
+
 
 # %%
 if __name__ == "__main__":
